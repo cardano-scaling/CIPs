@@ -9,7 +9,7 @@ Authors:
   - Sandro Coretti-Drayton <sandro.coretti@iohk.io>
   - Yves Hauser <yves.hauser@iohk.io>
   - Hans Lahe <hans.lahe@iohk.io>
-Implementors: 
+Implementors:
 Discussions:
   - https://github.com/cardano-foundation/CIPs/pull/872
 Created: 2024-08-07
@@ -39,7 +39,7 @@ There are several definitions of "settlement" or "finality", and precision is im
 If one is unwilling or unable to re-submit a rolled-back transaction, then the *ex ante* probability might be of most interest. This matches use cases where there is no opportunities for the parties involved in a transaction to resubmit it: for example, one party might have purchased physical goods and left the vendor's premises, leaving no chance to resubmit a rolled-back transaction. Other use cases are better suited for *post facto* settlement: for example, a partner chain, bridge, or decentralized exchange can monitor the ledger for a fixed time and see that the transaction either is not or is rolled back, knowing that there is only a vanishingly small chance of that status ever changing once they have watched the chain for the fixed amount of time, giving them an opportunity to re-submit the transaction if it was rolled back. Both opportunity and back-end infrastructure distinguish these use cases. Protocols like Peras optimize *post facto* certainty after predefined waiting times.
 
 Ouroboros Praos optimizes the worst-case scenario of highly adversarial conditions, but the Cardano blockchain typically operates in the absence of such a challenge. Optimistic protocols like Peras can take advantage of the "average case" of lower or no adversarial activity by settling transactions faster than Praos, but without sacrificing any of the security guarantees of Praos if the protocol (such as Peras) falls back to Praos-like behavior for a "safety and repair period" after adversarial conditions occur. Furthermore, protocol modification like Peras should not require radical or costly changes to the current `cardano-node` implementations. It is also desirable that settlement-related protocol changes do not interfere with other pending protocol changes like Genesis (security enhancement)[^3] and Leios (maximal throughput)[^4]. Fast settlement is a critical part of Cardano scaling, as described in [*Scaling blockchain protocols: a research-based approach*](https://www.youtube.com/watch?v=Czmg9WmSCcI).
- 
+
 [^1]: https://eprint.iacr.org/2022/1571.pdf
 
 [^2]: https://docs.google.com/spreadsheets/d/1s_LfDQ4Qg3BArMgr6GskGGzG_Ibg-VbPdMmlRWvZ75o/edit#gid=431199162
@@ -319,7 +319,7 @@ instance
   iDecEqParty .DecEq._≟_ = _≟-party_
 ```
 
-Honest parties follow the protocol's rules, but corrupt parties might choose not to. 
+Honest parties follow the protocol's rules, but corrupt parties might choose not to.
 
 ```agda
 data Honesty : Party → Set where
@@ -387,7 +387,7 @@ record Vote where
 
   votingWeight : ℕ
   votingWeight = VotingWeight.votes weight
-  
+
   votingRound' : ℕ
   votingRound' = getRoundNumber votingRound
 ```
@@ -425,7 +425,7 @@ record Certificate : Set where
   constructor MkCertificate
   field round : RoundNumber
         blockRef : Hash Block
-        
+
   roundNumber : ℕ
   roundNumber = getRoundNumber round
 ```
@@ -478,17 +478,17 @@ record Block where
         leadershipProof : LeadershipProof
         signature : Signature
         bodyHash : Hash Payload
-        
+
   slotNumber' : ℕ
   slotNumber' = getSlotNumber slotNumber
 
 postulate
   hashBlock : Block → Hash Block
-  
+
 instance
   iHashableBlock : Hashable Block
   iHashableBlock .hash = hashBlock
-  
+
 _≟-BlockHash_ : DecidableEquality (Hash Block)
 (MkHash b₁) ≟-BlockHash (MkHash b₂) with b₁ ≟-BS b₂
 ... | yes p = yes (cong MkHash p)
@@ -580,7 +580,7 @@ Diffusion of votes or blocks over the network may involve delays of a slot or mo
 module _ ⦃ _ : Params ⦄ ⦃ _ : Network ⦄ where
   open Params ⦃...⦄
   open Network ⦃...⦄
-  
+
   Delay = Fin (suc (suc Δ))
   pattern 𝟘 = fzero
   pattern 𝟙 = fsuc fzero
@@ -605,7 +605,7 @@ Messages are put into an *envelope* and assigned to a party. Such messages can b
 ```agda
 module _ ⦃ _ : Params ⦄ where
   open Params ⦃...⦄
-  
+
   record IsTreeType {T : Set}
                     (tree₀ : T)
                     (newChain : T → Chain → T)
@@ -1036,7 +1036,7 @@ Voting updates the party's local state and for all other parties a message is re
 ```agda
     infix 2 _⊢_⇉_
     data _⊢_⇉_ : {p : Party} → Honesty p → State → State → Set where
-    
+
       honest : ∀ {p} {t} {M} {w} {π} {σ} {b}
         → let
             open State
@@ -1240,12 +1240,11 @@ Additionally one would like the following property to be provided by the voting 
 - Voting should require minimal additional configuration (e.g., key management) for SPOs.
 - Voting and certificate construction should be fast in order to ensure it does not interfere with other operations happening in the node.
 
-The precise scheme and format for votes and certificates is immaterial to the protocol itself, but for reasons of efficiency (i.e., minimal resource usage) the selection of ALBA certificates, as described in proposed CIP [*Votes & Certificates on Cardano*](https://github.com/cardano-foundation/CIPs/pull/870), is recommended for Peras.
-
+The precise scheme and format for votes and certificates is immaterial to the protocol itself and is deferred to another proposed CIP [*Votes & Certificates on Cardano*](https://github.com/cardano-foundation/CIPs/pull/870).
 
 ### CDDL schema for the ledger
 
-Peras requires a single addition, `peras_cert`, the [block](#blocks) data on the ledger. 
+Peras requires a single addition, `peras_cert`, the [block](#blocks) data on the ledger.
 
 ```diff
  block =
@@ -1438,7 +1437,7 @@ The impact of Peras upon nodes falls into four categories: [network](#network), 
 For a fully synced nodes, the impact of Peras on network traffic is modest:
 
 * For votes, assuming $U \approx 100$, a committee size of 2000 SPOs, a single vote size of 700 bytes, means we will be adding an average of 14 kB/s to the expected traffic to each node,
-* For certificates, assuming an average of 50 kB size (half way between Mithril and ALBA sizes) means an negligible increase of 0.5 kB/s on average. Note that a node will download either votes or certificate for a given round, but never both so these numbers are not cumulative.
+* For certificates, assuming an average of 50 kB size consistent with the size of current Mithril certificates, means an negligible increase of 0.5 kB/s on average. Note that a node will download either votes or certificate for a given round, but never both so these numbers are not cumulative.
 
 A fully non-synced node will have to catch-up with the _tip_ of the chain and therefore download all relevant blocks _and_ certificates. At 50% load (current monthly load is 34% as of this writing[^9]), the chain produces a 45 kB block every 20 s on average. Below are rough estimates of the amount of data a node would have to download (and store) for synchronizing, depending on how long it has been offline:
 
@@ -1485,15 +1484,7 @@ Under similar assumptions, we can estimate the storage requirements entailed by 
 
 #### CPU
 
-The [Peras Technical Report #2](https://peras.cardano-scaling.org/docs/reports/tech-report-2#votes--certificates) provides some models and benchmarks for votes generation, votes verification, certificates proving and certificates verification, and votes diffusion. Those benchmarks are based on efficient sortition-based voting and ALBAs certificate, and demonstrate the impact of Peras on computational resources for a node will be minimal. Moreover, the most recent version of the algorithm detailed in this report is designed in such a way the voting process runs in parallel with block production and diffusion and therefore is not on this critical path. For ALBA certificates, assuming 1000 votes, a honest to faulty ratio of 80/20, and security parameter $λ=128$, one has the following typical measurements.
-
-| Metric                          |  Value |
-| ------------------------------- | -----: |
-| Certificate size                |  47 kB |
-| Proving time (per vote)         | 133 μs |
-| Vote verification (per vote)    | 161 μs |
-| Aggregation time                |   5 ms |
-| Verification time (certificate) |  15 ms |
+The [Peras Technical Report #2](https://peras.cardano-scaling.org/docs/reports/tech-report-2#votes--certificates) provides some models and benchmarks for votes generation, votes verification, certificates proving and certificates verification, and votes diffusion. The CPU requirements will of course be dependent on the details of the Certificates' scheme used but should be negligible compared to the duration of a voting round. Moreover, as already noted, votes and certificates construction are kept out of the critical path of block forging and diffusion hence they should not impact the node's performance.
 
 #### Memory
 
