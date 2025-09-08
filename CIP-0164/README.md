@@ -99,36 +99,36 @@ technical resources, visit the Leios Innovation R&D site at
 </details>
 
 <details>
-  <summary><h2>Table of figures and tables</h2></summary>
+  <summary><h2>Index of figures and tables</h2></summary>
 
 **Figures**
 
 - [Figure 1: Forecast of rewards on Cardano mainnet](#figure-1)
-- [Figure 2: SPO profitability under Praos if the Reserves did not contribute to rewards, as a function of transaction volume.[^profitability]](#figure-2)
-- [Figure 3: Leios chain structure showing the relationship between Ranking Blocks, Endorser Blocks, and Certificates](#figure-3)
-- [Figure 4: Detailed timing mechanism showing the three critical timing constraints for EB certification](#figure-4)
-- [Figure 5: Up- and downstream interactions of a node (simplified)](#figure-5)
+- [Figure 2: SPO profitability under Praos if the Reserves did not contribute to rewards](#figure-2)
+- [Figure 3: Leios chain structure showing Ranking Blocks, Endorser Blocks, and Certificates](#figure-3)
+- [Figure 4: Detailed timing mechanism showing timing constraints for EB certification](#figure-4)
+- [Figure 5: Up- and downstream interactions of a node](#figure-5)
 - [Figure 6: LeiosNotify mini-protocol state machine](#figure-6)
 - [Figure 7: LeiosFetch mini-protocol state machine](#figure-7)
-- [Figure 8: SPO profitability forecast under Leios showing clear economic benefits once sustained throughput exceeds 50-70 TxkB/s (36-50 TPS equivalent)](#figure-8)
+- [Figure 8: SPO profitability forecast under Leios](#figure-8)
 - [Figure 9: Time for transaction to reach the ledger](#figure-9)
 - [Figure 10: Transactions reaching the ledger](#figure-10)
 - [Figure 11: Number of TX references](#figure-11)
-- [Figure 12: Disposition of transactions in blocks (RBs are so small as not to be visible in the histograms. When an EB is generated, it is labeled in the plot as to whether it will eventually be certified ("EB later certified") or not ("EB later not certified"). When the certificate is included in an RB, the EB is labeled "EB now certified".)](#figure-12)
+- [Figure 12: Disposition of transactions in blocks](#figure-12)
 - [Figure 13: Size of transactions referenced by EBs](#figure-13)
-- [Figure 14: Arrival delays for transactions ("TX", upper left), ranking blocks ("RB", upper right), votes ("VT", lower left), and endorser blocks ("EB", lower right)](#figure-14)
-- [Figure 15: Mean nodal ingress (left) and Mean CPU load among all nodes (right)](#figure-15)
-- [Figure 16: Mean CPU load among all nodes ("Gen" = generated, "Val" = validated, "RH" = ranking block header, "RB" = ranking block body, "EH" = endorser block header, "EB" = endorser block body", "TX" = transaction)](#figure-16)
+- [Figure 14: Arrival delays for transactions, ranking blocks, votes, and endorser blocks](#figure-14)
+- [Figure 15: Mean nodal ingress and Mean CPU load among all nodes](#figure-15)
+- [Figure 16: Mean CPU load among all nodes](#figure-16)
 - [Figure 17: Fate of Plutus-heavy transactions in Leios](#figure-17)
 - [Figure 18: CPU usage in Plutus-heavy workloads for Leios](#figure-18)
-- [Figure 19: Comparison: Praos (red), proposed Leios (teal), and research Leios (orange)](#figure-19)
+- [Figure 19: Comparison: Praos, proposed Leios, and research Leios](#figure-19)
 
 **Tables**
 
 - [Table 1: Network Characteristics](#table-1)
 - [Table 2: Ledger Characteristics](#table-2)
 - [Table 3: Protocol Parameters](#table-3)
-- [Table 4: Leios Information Exchange Requirements table (IER table)](#table-4)
+- [Table 4: Leios Information Exchange Requirements (IER) table](#table-4)
 - [Table 5: Performance Metrics](#table-5)
 - [Table 6: Leios efficiency at different throughputs](#table-6)
 - [Table 7: Feasible Protocol Parameters](#table-7)
