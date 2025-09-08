@@ -1685,7 +1685,7 @@ during any slot, $\hat{q}_\text{vcpu}$, provides a useful indication of
 computational burstiness and of how a virtual machine should be sized for Leios.
 
 **_Adversarial stake:_** Similarly, when adversarial stake is appreciable and
-active, the throughput of Leios might be drop.
+active, the throughput of Leios might drop.
 
 $$
 \eta_\text{adversary}(s) = \frac{\text{bytes of transactions reaching the ledger without adversarial activity}}{\text{bytes of transactions reaching the ledger with adversarial activity given fraction } s \text{ of the total stake}}
@@ -2006,7 +2006,7 @@ The Leios simulations do not model memory or disk. With the advent of
 [UTxO-HD][utxohd], 16 GB of memory will remain be sufficient for Leios if the
 `OnDisk` option is used for the UTxO set. Disk requirements depend upon the
 growth of the ledger, but a sustained 0.150 MB/s throughput amounts to ledger
-size increasing by 4.7 TB each year: see the section below on Operating Costs
+size increasing by 4.7 TB each year: see the [section below](operating-costs) on Operating Costs
 for further discussion.
 
 ### Feasible Protocol Parameters
@@ -2029,7 +2029,7 @@ consider the following example based on simulated network measurements:
 
 **Given Network Characteristics:**
 
-- $\Delta_\text{hdr} = 1$ slot, $\Delta_\text{RB} = 5$ slots (Cardano Mainnet
+- $\Delta_\text{hdr} = 1$ slot, $\Delta_\text{RB} = 5$ slots (Cardano mainnet
   assumption for Praos security)
 - $\Delta_\text{EB}^{\text{O}} = 7$ slots (EB diffusion: transmission +
   processing), $\Delta_\text{EB}^{\text{W}} = 15$ slots (EB transmission time
@@ -2173,8 +2173,8 @@ increase each month as the ledger becomes larger.
 
 _Required TPS for Infrastructure Cost Coverage:_ Using average transaction sizes
 and fees, we can calculate the required TPS to generate enough fees to cover
-infrastructure costs. Not that only about 20% of fees currently accrue to SPOs,
-but the table assumes 100% would accrue to them: to maintain the current 80%-20%
+infrastructure costs. Note that only about 20% of fees currently accrue to SPOs,
+but the table assumes 100% would accrue to them; to maintain the current 80%-20%
 split, fives times as much fee would have to be collected compared to what is
 listed in the table.
 
@@ -2433,7 +2433,7 @@ are:
   - Stake- and network-based attacks
 - [ ] Develop node-level, but implementation-independent conformance test suites
       (blueprint).
-- [ ] Create a public leios-specific testnet with repeated load tests and
+- [ ] Create a public Leios-specific testnet with repeated load tests and
       encourage dependant infrastructure updates.
 - [ ] Implement / integrate necessary changes to `cardano-node` and other node
       implementations (this is big).
