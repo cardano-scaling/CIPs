@@ -1514,7 +1514,7 @@ weighed against the throughput increase.
 High concurrency allows for higher throughput by doing more transaction
 processing at the same time. In the published design and otherwise discussed
 variants concurrency is introduced by allowing agreement on sequences of
-transactions independently of the Proas block production. This is the case for
+transactions independently of the Praos block production. This is the case for
 when endorser blocks would be announced separately from Praos blocks or input
 blocks be produced on a completely separate schedule. While such protocol
 designs often result in higher latency due to more rounds, concurrency in itself
