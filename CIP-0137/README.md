@@ -710,8 +710,10 @@ the KES key.
   - See [here](https://github.com/IntersectMBO/ouroboros-network/pull/5109)
 - [ ] Implement the n2n and n2c mini-protocols:
   - [ ] Haskell DMQ Node:
-    - [ ] n2c mini-protocols
-    - [ ] n2n mini-protocols
+    - [x] n2c mini-protocols
+    - [x] n2n mini-protocols
+    - [ ] validation of messages
+    - [ ] production logging system
   - [ ] Pallas Library (TxPipe):
     - [x] n2c mini-protocols
     - [ ] n2n mini-protocols
