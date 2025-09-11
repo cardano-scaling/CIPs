@@ -390,7 +390,7 @@ inclusion are:
 
 1. `RB'` **may** include a certificate for the EB announced in `RB` if and only
    if `RB'` is at least $3 \times L_\text{hdr} + L_\text{vote} + L_\text{diff}$
-   slots after `RB` (where $L_\text{diff}$ is a further <a href="#protocol-parameters">protocol parameter</a>).
+   slots after `RB`.
 
 2. Any included certificate must be valid as defined in
    [Certificate Validation](#certificate-validation).
@@ -402,6 +402,10 @@ inclusion are:
 
 4. Regardless of whether `RB'` includes a certificate, it may optionally
    announce its own EB for future certification by subsequent blocks.
+
+where $L_\text{hdr}$, $L_\text{vote}$ and $L_\text{diff}$ are
+<a href="#protocol-parameters">protocol parameters</a> represented by a number
+of slots.
 
 This **certificate inclusion delay** ensures certified EBs have sufficient time
 to diffuse throughout the network before their transactions are included in the
