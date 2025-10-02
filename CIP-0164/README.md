@@ -383,9 +383,9 @@ aggregating the collected votes.
 
 #### Step 5: Chain Inclusion
 
-Block producers creating subsequent RBs (`RB'`) may use a certificate for the EB
-announced by a preceding block (`RB`) if sufficient time has elapsed. See also
-Figure 4. Concretely, the inclusion rules are:
+Block producers creating subsequent RBs (`RB'`) may only include valid
+certificates for the EB announced by a preceding block (`RB`) if sufficient time
+has elapsed. See also Figure 4. Concretely, the inclusion rules are:
 
 1. `RB'` contains **either**
 
@@ -409,15 +409,15 @@ of slots.
 The certificate inclusion delay ensures certified EBs have sufficient time to
 diffuse throughout the network and do not impact [protocol
 security](#protocol-security). When a certificate is included, no further
-transactions are allowed in the RB for the same reason[^3]. If the next RB is
-produced before this minimum delay has elapsed, the EB certificate cannot be
-included and the EB is discarded.
+transactions are allowed in the RB for the same reason.
 
-[^3]: If transactions "after" the certificate would be allowed, a validating
-    node would need to build the ledger state from all endorsed transactions
-    before it can validate the transactions in the same block. This would result
-    in much stricter timing constraints to ensure [protocol
-    security](#protocol-security).
+If transactions next to the certificate would be allowed, a validating node
+would need to build the ledger state from all endorsed transactions before it
+can validate the transactions in the same block, resulting in much stricter
+timing constraints to ensure [protocol security](#protocol-security).
+
+If the next RB is produced before this minimum delay has elapsed, the EB
+certificate cannot be included and the EB is discarded.
 
 ### Protocol Parameters
 
