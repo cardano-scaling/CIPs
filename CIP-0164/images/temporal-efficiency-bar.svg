@@ -575,7 +575,7 @@
 </defs>
 <g clip-path='url(#cpMTAwNC43MnwxMDIxLjczfDUuNDh8MTA4LjI3)'>
 <rect x='1004.72' y='5.48' width='17.01' height='102.79' style='stroke-width: 1.07; stroke: none; fill: #D9D9D9;' />
-<text transform='translate(1010.02,56.87) rotate(90)' text-anchor='middle' style='font-size: 8.80px;fill: #1A1A1A; font-family: "DejaVu Sans";' textLength='59.72px' lengthAdjust='spacingAndGlyphs'>0.150 TxMB/s</text>
+<text transform='translate(1010.02,56.87) rotate(90)' text-anchor='middle' style='font-size: 8.80px;fill: #1A1A1A; font-family: "DejaVu Sans";' textLength='48.84px' lengthAdjust='spacingAndGlyphs'>150 TxkB/s</text>
 </g>
 <g clip-path='url(#cpMC4wMHwxMTUyLjAwfDAuMDB8NTc2LjAw)'>
 </g>
@@ -586,7 +586,7 @@
 </defs>
 <g clip-path='url(#cpMTAwNC43MnwxMDIxLjczfDExMy43NXwyMTYuNTQ=)'>
 <rect x='1004.72' y='113.75' width='17.01' height='102.79' style='stroke-width: 1.07; stroke: none; fill: #D9D9D9;' />
-<text transform='translate(1010.02,165.14) rotate(90)' text-anchor='middle' style='font-size: 8.80px;fill: #1A1A1A; font-family: "DejaVu Sans";' textLength='59.72px' lengthAdjust='spacingAndGlyphs'>0.200 TxMB/s</text>
+<text transform='translate(1010.02,165.14) rotate(90)' text-anchor='middle' style='font-size: 8.80px;fill: #1A1A1A; font-family: "DejaVu Sans";' textLength='48.84px' lengthAdjust='spacingAndGlyphs'>200 TxkB/s</text>
 </g>
 <g clip-path='url(#cpMC4wMHwxMTUyLjAwfDAuMDB8NTc2LjAw)'>
 </g>
@@ -597,7 +597,7 @@
 </defs>
 <g clip-path='url(#cpMTAwNC43MnwxMDIxLjczfDIyMi4wMnwzMjQuODE=)'>
 <rect x='1004.72' y='222.02' width='17.01' height='102.79' style='stroke-width: 1.07; stroke: none; fill: #D9D9D9;' />
-<text transform='translate(1010.02,273.41) rotate(90)' text-anchor='middle' style='font-size: 8.80px;fill: #1A1A1A; font-family: "DejaVu Sans";' textLength='59.72px' lengthAdjust='spacingAndGlyphs'>0.250 TxMB/s</text>
+<text transform='translate(1010.02,273.41) rotate(90)' text-anchor='middle' style='font-size: 8.80px;fill: #1A1A1A; font-family: "DejaVu Sans";' textLength='48.84px' lengthAdjust='spacingAndGlyphs'>250 TxkB/s</text>
 </g>
 <g clip-path='url(#cpMC4wMHwxMTUyLjAwfDAuMDB8NTc2LjAw)'>
 </g>
@@ -608,7 +608,7 @@
 </defs>
 <g clip-path='url(#cpMTAwNC43MnwxMDIxLjczfDMzMC4yOXw0MzMuMDg=)'>
 <rect x='1004.72' y='330.29' width='17.01' height='102.79' style='stroke-width: 1.07; stroke: none; fill: #D9D9D9;' />
-<text transform='translate(1010.02,381.68) rotate(90)' text-anchor='middle' style='font-size: 8.80px;fill: #1A1A1A; font-family: "DejaVu Sans";' textLength='59.72px' lengthAdjust='spacingAndGlyphs'>0.300 TxMB/s</text>
+<text transform='translate(1010.02,381.68) rotate(90)' text-anchor='middle' style='font-size: 8.80px;fill: #1A1A1A; font-family: "DejaVu Sans";' textLength='48.84px' lengthAdjust='spacingAndGlyphs'>300 TxkB/s</text>
 </g>
 <g clip-path='url(#cpMC4wMHwxMTUyLjAwfDAuMDB8NTc2LjAw)'>
 </g>
@@ -619,7 +619,7 @@
 </defs>
 <g clip-path='url(#cpMTAwNC43MnwxMDIxLjczfDQzOC41Nnw1NDEuMzU=)'>
 <rect x='1004.72' y='438.56' width='17.01' height='102.79' style='stroke-width: 1.07; stroke: none; fill: #D9D9D9;' />
-<text transform='translate(1010.02,489.95) rotate(90)' text-anchor='middle' style='font-size: 8.80px;fill: #1A1A1A; font-family: "DejaVu Sans";' textLength='59.72px' lengthAdjust='spacingAndGlyphs'>0.350 TxMB/s</text>
+<text transform='translate(1010.02,489.95) rotate(90)' text-anchor='middle' style='font-size: 8.80px;fill: #1A1A1A; font-family: "DejaVu Sans";' textLength='48.84px' lengthAdjust='spacingAndGlyphs'>350 TxkB/s</text>
 </g>
 <g clip-path='url(#cpMC4wMHwxMTUyLjAwfDAuMDB8NTc2LjAw)'>
 <polyline points='78.32,544.09 78.32,541.35 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
