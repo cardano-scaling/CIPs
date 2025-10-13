@@ -2207,11 +2207,11 @@ listed in the table.
 
 | Infrastructure cost | Required ADA<br/>@ $0.45/ADA | Required transactions<br/>(average size)<br/>@ $0.45/ADA | Required transactions<br/>(small size)<br/>@ $0.45/ADA |
 | ------------------: | ---------------------------: | -------------------------------------------------------: | -----------------------------------------------------: |
-|         $13.2M/year |               403k ADA/epoch |                                                4.30 Tx/s |                                              5.61 Tx/s |
-|         $14.6M/year |               444k ADA/epoch |                                                4.73 Tx/s |                                              6.17 Tx/s |
-|         $15.9M/year |               485k ADA/epoch |                                                5.17 Tx/s |                                              6.74 Tx/s |
-|         $17.6M/year |               536k ADA/epoch |                                                5.72 Tx/s |                                              7.46 Tx/s |
-|         $18.5M/year |               564k ADA/epoch |                                                6.02 Tx/s |                                              7.85 Tx/s |
+|         $15.9M/year |               483k ADA/epoch |                                                5.15 Tx/s |                                              6.71 Tx/s |
+|         $17.6M/year |               535k ADA/epoch |                                                5.70 Tx/s |                                              7.44 Tx/s |
+|         $18.5M/year |               563k ADA/epoch |                                                6.00 Tx/s |                                              7.83 Tx/s |
+|         $19.8M/year |               603k ADA/epoch |                                                6.43 Tx/s |                                              8.39 Tx/s |
+|         $21.8M/year |               622k ADA/epoch |                                                7.06 Tx/s |                                              9.21 Tx/s |
 
 <em>Table 9: Required TPS for Infrastructure Cost Coverage</em>
 
