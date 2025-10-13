@@ -1778,10 +1778,10 @@ of transactions, in data that must be stored permanently as the ledger history.
 | Throughput [TxMB/s] | TPS at 1500 B/tx | Conditions    | Mempool to EB [s] | Mempool to ledger [s] | Space efficiency [%] |
 | ------------------: | ---------------: | ------------- | ----------------: | --------------------: | -------------------: |
 |               0.150 |            100.0 | light load    |              17.9 |                  55.9 |                 92.3 |
-|               0.200 |            142.9 | moderate load |              22.6 |                  64.5 |                 97.2 |
+|               0.200 |            133.3 | moderate load |              22.6 |                  64.5 |                 97.2 |
 |               0.250 |            166.7 | heavy load    |              22.9 |                  62.0 |                 97.5 |
 |               0.300 |            200.0 | congestion    |              43.1 |                  83.8 |                 97.5 |
-|               0.350 |            250.0 | over capacity |             135.5 |                 176.9 |                 96.9 |
+|               0.350 |            233.3 | over capacity |             135.5 |                 176.9 |                 96.9 |
 
 <em>Table 6: Leios efficiency at different throughputs</em>
 
@@ -2185,11 +2185,11 @@ increase each month as the ledger becomes larger.
 
 | Throughput | Average-size transactions | Small transactions | Per-node operation | Per-node storage<br/>($) | Per-node storage<br/>(GB) | 10k-node network<br/>(first year) | 10k-node network<br/>(first year) |
 | ---------: | ------------------------: | -----------------: | -----------------: | -----------------------: | ------------------------: | --------------------------------: | --------------------------------: |
-|  50 TxkB/s |                   33 Tx/s |           167 Tx/s |      $105.97/month |             $8.89/month² |              131 GB/month |                            $13.2M |                       $181k/epoch |
-| 100 TxkB/s |                   67 Tx/s |           333 Tx/s |      $112.68/month |            $17.79/month² |              263 GB/month |                            $14.6M |                       $200k/epoch |
-| 150 TxkB/s |                  100 Tx/s |           500 Tx/s |      $119.44/month |            $26.71/month² |              394 GB/month |                            $15.9M |                       $218k/epoch |
-| 200 TxkB/s |                  133 Tx/s |           667 Tx/s |      $128.01/month |            $37.91/month² |              526 GB/month |                            $17.6M |                       $241k/epoch |
-| 250 TxkB/s |                  167 Tx/s |           833 Tx/s |      $132.56/month |            $44.01/month² |              657 GB/month |                            $18.5M |                       $254k/epoch |
+| 150 TxkB/s |                  100 Tx/s |           500 Tx/s |      $119.01/month |            $26.35/month² |              394 GB/month |                            $15.9M |                       $217k/epoch |
+| 200 TxkB/s |                  133 Tx/s |           667 Tx/s |      $127.60/month |            $37.64/month² |              526 GB/month |                            $17.6M |                       $241k/epoch |
+| 250 TxkB/s |                  167 Tx/s |           833 Tx/s |      $132.24/month |            $43.92/month² |              657 GB/month |                            $18.5M |                       $253k/epoch |
+| 300 TxkB/s |                  200 Tx/s |          1000 Tx/s |      $138.88/month |            $54.64/month² |              788 GB/month |                            $19.8M |                       $271k/epoch |
+| 350 TxkB/s |                  233 Tx/s |          1167 Tx/s |      $148.47/month |            $65.59/month² |              920 GB/month |                            $21.8M |                       $298k/epoch | 
 
 <em>Table 8: Operating Costs by Transaction Throughput</em>
 
