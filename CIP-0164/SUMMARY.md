@@ -1,4 +1,4 @@
-# Ouroboros Leios: 5-Minute Summary
+# Ouroboros Leios Summary
 
 > [!NOTE]
 >
