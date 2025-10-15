@@ -1262,8 +1262,9 @@ peers. Syncing peers will be discussed below.
 title: LeiosNotify
 ---
 graph LR
-   style StIdle color:green;
-   style StBusy color:blue;
+   style StIdle fill:PaleGreen,stroke:DarkGreen;
+   style StBusy fill:PowderBlue,stroke:DarkBlue;
+   style StDone fill:SeaShell,stroke:DimGray;
 
    StIdle -->|MsgLeiosNotificationRequestNext| StBusy
    StBusy -->|MsgLeiosBlockAnnouncement| StIdle
@@ -1286,11 +1287,12 @@ graph LR
 title: LeiosFetch
 ---
 graph LR
-   style StIdle color:green;
-   style StBlock color:blue;
-   style StBlockTxs color:blue;
-   style StVotes color:blue;
-   style StBlockRange color:blue;
+   style StIdle fill:PaleGreen,stroke:DarkGreen;
+   style StBlock fill:PowderBlue,stroke:DarkBlue;
+   style StBlockTxs fill:PowderBlue,stroke:DarkBlue;
+   style StDone fill:SeaShell,stroke:DimGray;
+   style StVotes fill:PowderBlue,stroke:DarkBlue;
+   style StBlockRange fill:PowderBlue,stroke:DarkBlue;
 
    StIdle -->|MsgLeiosBlockRequest| StBlock -->|MsgLeiosBlock| StIdle
    StIdle -->|MsgLeiosBlockTxsRequest| StBlockTxs -->|MsgLeiosBlockTxs| StIdle
