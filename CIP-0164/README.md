@@ -545,6 +545,12 @@ There are three key parameters related to time, which are important for
 
 **Equivocation Detection ($3 L_\text{hdr}$)**
 
+**Equivocation** is the malicious behavior where a block producer creates
+multiple conflicting blocks for the same slot and distributes different versions
+to different parts of the network. This attack aims to split the honest vote,
+potentially preventing certification of any block or allowing certification of
+an adversarial block if honest nodes vote on different versions.
+
 This period starts exactly when an RB announces an EB. During this time, the
 network detects any attempts by adversaries to create multiple conflicting
 blocks for the same slot. The equivocation detection mechanism ensures that
