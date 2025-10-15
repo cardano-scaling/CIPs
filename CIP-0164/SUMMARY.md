@@ -54,6 +54,8 @@ EB transactions themselves are not registered on-chain as separate blocks.
 
 ### **Massive Throughput Increase**
 
+- Achieving 30-65x improvement over current mainnet (140-300 TxkB/s, equivalent
+  to ~100-200 TPS depending on average transaction sizes)
 - Each EB can reference significantly more transactions than standard blocks
 - Configurable via protocol parameters to optimize for different network
   conditions
@@ -76,7 +78,8 @@ EB transactions themselves are not registered on-chain as separate blocks.
 
 ### **Scalability Without Compromise**
 
-- Dramatically increased transaction capacity
+- Dramatically increased transaction capacity with confirmation in 45-60 seconds
+- Supports sustainable rewards as Reserve depletes, requiring ~36 TPS by 2029
 - Maintains economic sustainability
 - Minimal added complexity through few new protocol elements
 
