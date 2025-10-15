@@ -2,8 +2,6 @@
 
 > [!NOTE]
 >
-> Quick Read
->
 > This summary provides a comprehensive overview of Ouroboros Leios. For the
 > complete technical specification, see [CIP-0164](README.md).
 
