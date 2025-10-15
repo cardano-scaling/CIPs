@@ -36,6 +36,45 @@ secondary block referencing additional transactions. Secondary blocks undergo
 committee validation before ledger inclusion, enabling significantly higher
 throughput.
 
+**Overview of Ouroboros Leios**
+
+Ouroboros Leios enhances Cardano's throughput through a linear, sequential
+protocol that operates alongside the existing Praos chain. Here's how it works:
+
+**The Protocol Flow:**
+
+1. **EB Proposal**: When a stake pool wins slot leadership, it creates both a
+   standard Ranking Block (RB) and an optional Endorser Block (EB) containing
+   references to additional transactions
+2. **EB Distribution**: The EB and its referenced transactions are rapidly
+   distributed across the network
+3. **Committee Validation**: A randomly selected committee of stake pools
+   validates the EB within a voting period
+4. **Certification**: If enough committee members vote (≥75% threshold), the EB
+   becomes certified
+5. **Chain Inclusion**: Certified EBs are applied to the ledger just before
+   their certifying RB, but the EB transactions themselves are not registered
+   on-chain as separate blocks
+
+**Characteristics:**
+
+- **EB Size**: Each EB can reference significantly more transactions than
+  standard blocks (configurable via protocol parameters)
+- **Expected Throughput**: Simulations demonstrate substantial throughput
+  improvements, with the exact TPS depending on transaction sizes and protocol
+  parameter tuning
+- **Transaction Placement**: EB transactions are applied directly to the ledger
+  state before the certifying RB, ensuring they don't create additional on-chain
+  bloat
+- **Opportunistic Inclusion**: Not all EBs get certified due to timing
+  constraints, which ensures sufficient network diffusion periods for Praos
+  security guarantees
+
+The protocol maintains Praos security guarantees while dramatically increasing
+throughput through careful timing constraints and committee-based validation,
+enabling Cardano to support the transaction volumes needed for long-term
+economic sustainability.
+
 This specification presents the first version of the Ouroboros Leios protocol
 family, designed to deliver substantial throughput improvements with economic
 sustainability and minimal added complexity through only few new protocol
@@ -51,7 +90,6 @@ technical resources, visit the Leios Innovation R&D site at
 - [Abstract](#abstract)
 - [Motivation: why is this CIP necessary?](#motivation-why-is-this-cip-necessary)
 - [Specification](#specification)
-  - [Summary](#summary)
   - [Protocol Flow](#protocol-flow)
     - [Step 1: Block Production](#step-1-block-production)
     - [Step 2: EB Distribution](#step-2-eb-distribution)
@@ -278,47 +316,6 @@ chain operation.
 EB inclusion is therefore opportunistic rather than guaranteed, depending on the
 random timing of block production relative to the certification process. The
 precise timing mechanism is detailed in the following section.
-
-### Summary
-
-**Overview of Ouroboros Leios**
-
-Ouroboros Leios enhances Cardano's throughput through a linear, sequential
-protocol that operates alongside the existing Praos chain. Here's how it works:
-
-**The Protocol Flow:**
-
-1. **EB Proposal**: When a stake pool wins slot leadership, it creates both a
-   standard Ranking Block (RB) and an optional Endorser Block (EB) containing
-   references to additional transactions
-2. **EB Distribution**: The EB and its referenced transactions are rapidly
-   distributed across the network
-3. **Committee Validation**: A randomly selected committee of stake pools
-   validates the EB within a voting period
-4. **Certification**: If enough committee members vote (≥75% threshold), the EB
-   becomes certified
-5. **Chain Inclusion**: Certified EBs are applied to the ledger just before
-   their certifying RB, but the EB transactions themselves are not registered
-   on-chain as separate blocks
-
-**Characteristics:**
-
-- **EB Size**: Each EB can reference significantly more transactions than
-  standard blocks (configurable via protocol parameters)
-- **Expected Throughput**: Simulations demonstrate substantial throughput
-  improvements, with the exact TPS depending on transaction sizes and protocol
-  parameter tuning
-- **Transaction Placement**: EB transactions are applied directly to the ledger
-  state before the certifying RB, ensuring they don't create additional on-chain
-  bloat
-- **Opportunistic Inclusion**: Not all EBs get certified due to timing
-  constraints, which ensures sufficient network diffusion periods for Praos
-  security guarantees
-
-The protocol maintains Praos security guarantees while dramatically increasing
-throughput through careful timing constraints and committee-based validation,
-enabling Cardano to support the transaction volumes needed for long-term
-economic sustainability.
 
 ### Protocol Flow
 
