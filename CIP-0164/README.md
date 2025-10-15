@@ -1781,10 +1781,14 @@ study][topology-comparison] has demonstrated that analysis conclusions deriving
 from the `mini-mainnet` topology are also valid for the `pseudo-mainnet`
 topology; the advantage of using the former is that simulations run much more
 quickly. Simulated RB diffusion is consistent with the Praos performance
-model.[^praosp]
+model.[^praosp] For instructions on how to recreate these simulation results,
+see the [simulation recreation guide][^sim-recreation].
 
 [^mnrm]:
     [Mainnet-like topologies for Leios](https://github.com/input-output-hk/ouroboros-leios/blob/6d8619c53cc619a25b52eac184e7f1ff3c31b597/data/simulation/pseudo-mainnet/ReadMe.md)
+
+[^sim-recreation]:
+    [How to recreate simulation results](https://github.com/input-output-hk/ouroboros-leios/blob/main/analysis/sims/ReadMe.md)
 
 [^pseudo]:
     [Leios pseudo-mainnet topology](https://github.com/input-output-hk/ouroboros-leios/blob/6d8619c53cc619a25b52eac184e7f1ff3c31b597/data/simulation/pseudo-mainnet/topology-v1.md)
