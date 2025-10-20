@@ -1819,7 +1819,15 @@ and clients, taking longer and longer to reach the ledger: the bottom row of the
 first plot illustrates that when transactions stop being submitted in the 16th
 minute of the simulation, those queued up in the memory pool and clients do
 eventually reach the ledger, as expected for a protocol exhibiting
-"backpressure" on clients when load exceeds capacity.
+"backpressure" on clients when load exceeds capacity. A realistic prototype or
+an actual Leios node implementation would not exhibit the long delays that one
+sees in the bottom row of Figure 9, which is an artifact of the simulator having
+an unbounded memory pool; instead, the times from the memory pool to ledger
+would exhibit the behavior of the 300 TxkB/s row above it, where the memory pool
+never gets fuller than can be cleared by one or two successful EBs. (Note that
+Praos is subject to this same behavior where the larger the memory pool, the
+longer the delay from the memory pool to ledger, under conditions of demand that
+exceeds capacity.)
 
 <div align="center">
 <a name="figure-9" id="figure-9"></a>
