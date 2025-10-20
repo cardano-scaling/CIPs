@@ -1810,7 +1810,16 @@ the ledger, but in heavier load it might take three minutes or even longer. The
 capacity parameter $S_\text{EB-tx}$ (12 MB/EB in these simulations)
 fundamentally limits the amortized maximum throughput of Leios: furthermore, it
 affects how long it takes transactions to reach the ledger as the throughput
-approaches the capacity. Note that 300 TxkB/s is just below the theoretical limit of throughput for the protocol parameters used in the simulation; at that rate, runs of unlucky sortition will delay some transactions reaching the ledger, even though those transactions eventually do reach it when sortition becomes luckier. At 350 TxkB/s, transactions will backup up in the memory pool and clients, taking longer and longer to reach the ledger: the bottom row of the first plot illustrates that when transactions stop being submitted in the 16th minute of the simulation, those queued up in the memory pool and clients do eventually reach the ledger, as expected for a protocol exhibiting "backpressure" on clients when load exceeds capacity.
+approaches the capacity. Note that 300 TxkB/s is just below the theoretical
+limit of throughput for the protocol parameters used in the simulation; at that
+rate, runs of unlucky sortition will delay some transactions reaching the
+ledger, even though those transactions eventually do reach it when sortition
+becomes luckier. At 350 TxkB/s, transactions will backup up in the memory pool
+and clients, taking longer and longer to reach the ledger: the bottom row of the
+first plot illustrates that when transactions stop being submitted in the 16th
+minute of the simulation, those queued up in the memory pool and clients do
+eventually reach the ledger, as expected for a protocol exhibiting
+"backpressure" on clients when load exceeds capacity.
 
 <div align="center">
 <a name="figure-9" id="figure-9"></a>
