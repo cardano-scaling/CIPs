@@ -76,9 +76,8 @@ EB transactions themselves are not registered on-chain as separate blocks.
 
 ## Economic Benefits
 
-### **Scalability Without Compromise**
-
-- Dramatically increased transaction capacity with confirmation in 45-60 seconds
+### **Balanced Scalability**
+- increased transaction capacity with moderate increase in confirmation time (45-60 seconds)
 - Supports sustainable rewards as Reserve depletes, requiring ~36 TPS by 2029
 - Maintains economic sustainability
 - Minimal added complexity through few new protocol elements
