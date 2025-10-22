@@ -666,6 +666,7 @@ RBs are Praos blocks extended to support Leios by optionally announcing EBs in
 their headers and embedding EB certificates in their bodies.
 
 1. **Header additions**:
+
    - `announced_eb` (optional): Hash of the EB created by this block producer
    - `announced_eb_size` (optional): Size in bytes of the announced EB (4 bytes)
    - `certified_eb` (optional): Single bit indicating whether this RB certifies
@@ -781,6 +782,7 @@ following before accepting the block:
    signatures in this implementation)
 
 3. **Voter Eligibility**:
+
    - Persistent voters must have been selected as such by the [Fait Accompli
      scheme][fait-accompli-sortition] for the current epoch
    - Non-persistent voters have provided valid sortition proofs based on the
@@ -1939,40 +1941,81 @@ lower right)</em>
 
 ##### Behavior under varying load
 
-The simulation results also provide evidence that Leios operates as a well-behaved protocol, conforming to three specific desirable properties.
+The simulation results also provide evidence that Leios operates as a
+well-behaved protocol, conforming to three specific desirable properties.
 
-1. *Throughput is proportional to load until it plateaus when capacity is reached:* Figure 14a illustrates the near equality of throughput to load up until the approximately 300 TxkB/s capacity (determined by the protocol parameters) is reached, beyond which throughput stays constant. (Note that the randomness of sortition and the finite duration of the simulation results in some jitter and uncertainty in the data points even though the trend is clear.) It is particularly important that the throughput does not degrade at very high demand: instead Leios provides backpressure on clients, via the memory pool, so that the protocol operates at capacity even though demand is higher.
-2. *Transaction delivery time and its variance remains constant up until the protocol's capacity is reached:* The left side of Figure 14b demonstrates that the observed range of transaction delivery time, which is defined in these plots as the time from being submitted to the time of reaching the ledger, stays essentially constant nearly until capacity is reached. Because the Leios simulator has an unbounded (unlimited) memory pool, one sees that times increase beyond that due to the memory pool growing ever larger. Near capacity, fluctuations from sortitition result in uncertainty. The right side of Figure 14b shows the additional time imposed by Leios relative to Praos: at very low demand, Leios does not often forge EBs and the delay is small, but at moderate and high loads a nearly constant delay is associated with most transactions appearing in EBs. This property is important in that Leios performance does not degrate as demand approaches or exceeds capacity.
-3. *The processing cost per transaction decreases or levels off as load increases:* Figure 14c evidences that the CPU and network used per transaction generally drops as load (i.e., demand) increases. (Once again there are uncertainties in this plot due to the randomness or sortition and design choices in the Leios simulator.) This property is important in that the per-transaction consumption of resources should not lower efficiency, which would lead to disproportional stress on resources as load increases.
+1. _Throughput is proportional to load until it plateaus when capacity is
+   reached:_ Figure 14a illustrates the near equality of throughput to load up
+   until the approximately 300 TxkB/s capacity (determined by the protocol
+   parameters) is reached, beyond which throughput stays constant. (Note that
+   the randomness of sortition and the finite duration of the simulation results
+   in some jitter and uncertainty in the data points even though the trend is
+   clear.) It is particularly important that the throughput does not degrade at
+   very high demand: instead Leios provides backpressure on clients, via the
+   memory pool, so that the protocol operates at capacity even though demand is
+   higher.
+2. _Transaction delivery time and its variance remains constant up until the
+   protocol's capacity is reached:_ The left side of Figure 14b demonstrates
+   that the observed range of transaction delivery time, which is defined in
+   these plots as the time from being submitted to the time of reaching the
+   ledger, stays essentially constant nearly until capacity is reached. Because
+   the Leios simulator has an unbounded (unlimited) memory pool, one sees that
+   times increase beyond that due to the memory pool growing ever larger. Near
+   capacity, fluctuations from sortitition result in uncertainty. The right side
+   of Figure 14b shows the additional time imposed by Leios relative to Praos:
+   at very low demand, Leios does not often forge EBs and the delay is small,
+   but at moderate and high loads a nearly constant delay is associated with
+   most transactions appearing in EBs. This property is important in that Leios
+   performance does not degrate as demand approaches or exceeds capacity.
+3. _The processing cost per transaction decreases or levels off as load
+   increases:_ Figure 14c evidences that the CPU and network used per
+   transaction generally drops as load (i.e., demand) increases. (Once again
+   there are uncertainties in this plot due to the randomness or sortition and
+   design choices in the Leios simulator.) This property is important in that
+   the per-transaction consumption of resources should not lower efficiency,
+   which would lead to disproportional stress on resources as load increases.
 
 <div align="center">
 <a name="figure-14a" id="figure-14a"></a>
 
 ![Leios throughput is proportional to load until it plateaus when capacity is reached.](images/load-throughput.svg)
 
-<em>Figure 14a: Leios throughput (bytes reaching the ledger) as a function of load (i.e., demand). Points are uncertain due to the randomness of block production in these simulations of twenty minutes. Note that the simulator's unlimited memory pool starts empty.</em>
+<em>Figure 14a: Leios throughput (bytes reaching the ledger) as a function of
+load (i.e., demand). Points are uncertain due to the randomness of block
+production in these simulations of twenty minutes. Note that the simulator's
+unlimited memory pool starts empty.</em>
 
 </div>
 
 <div align="center">
 <a name="figure-14b" id="figure-14b"></a>
 
-|   |   |
-|---|---|
+|                                                                                                      |                                                                          |
+| ---------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
 | ![The variability of delivery times plateaus until capacity is reached.](images/load-txvariance.svg) | ![Transaction delay to ledger for Leios vs Praos](images/load-delay.svg) |
 
-<em>Figure 14b: (left) time from a transaction's being submitted to the memory pool to its reaching the ledger (10th, 50th, and 90th percentiles) as a function of load; (right) Additional time it takes a transaction to reach the ledger in Leios, relative to the time it would have taken in Praos, as a function of demand. Points are uncertain due to the randomness of block production in these simulations of twenty minutes. Note that the simulator's unlimited memory pool starts empty.</em>
+<em>Figure 14b: (left) time from a transaction's being submitted to the memory
+pool to its reaching the ledger (10th, 50th, and 90th percentiles) as a function
+of load; (right) Additional time it takes a transaction to reach the ledger in
+Leios, relative to the time it would have taken in Praos, as a function of
+demand. Points are uncertain due to the randomness of block production in these
+simulations of twenty minutes. Note that the simulator's unlimited memory pool
+starts empty.</em>
 
 </div>
 
 <div align="center">
 <a name="figure-14c" id="figure-14c"></a>
 
-|   |   |
-|---|---|
+|                                                                                                                              |                                                                                                                                     |
+| ---------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
 | ![The CPU cost of processing per transaction either remains the same or goes down as the load goes up.](images/load-cpu.svg) | ![The network cost of processing per transaction either remains the same or goes down as the load goes up.](images/load-egress.svg) |
 
-<em>Figure 14c: The resource cost of Leios processing per transaction as a function of load (i.e., demand): (left) CPU usage; (right) network egress. Points are uncertain due to the randomness of block production in these simulations of twenty minutes. Note that the simulator's unlimited memory pool starts empty.</em>
+<em>Figure 14c: The resource cost of Leios processing per transaction as a
+function of load (i.e., demand): (left) CPU usage; (right) network egress.
+Points are uncertain due to the randomness of block production in these
+simulations of twenty minutes. Note that the simulator's unlimited memory pool
+starts empty.</em>
 
 </div>
 
@@ -2255,7 +2298,7 @@ increase each month as the ledger becomes larger.
 | 200 TxkB/s |                  133 Tx/s |           667 Tx/s |      $127.60/month |            $37.64/month² |              526 GB/month |                            $17.6M |                       $241k/epoch |
 | 250 TxkB/s |                  167 Tx/s |           833 Tx/s |      $132.24/month |            $43.92/month² |              657 GB/month |                            $18.5M |                       $253k/epoch |
 | 300 TxkB/s |                  200 Tx/s |          1000 Tx/s |      $138.88/month |            $54.64/month² |              788 GB/month |                            $19.8M |                       $271k/epoch |
-| 350 TxkB/s |                  233 Tx/s |          1167 Tx/s |      $148.47/month |            $65.59/month² |              920 GB/month |                            $21.8M |                       $298k/epoch | 
+| 350 TxkB/s |                  233 Tx/s |          1167 Tx/s |      $148.47/month |            $65.59/month² |              920 GB/month |                            $21.8M |                       $298k/epoch |
 
 <em>Table 8: Operating Costs by Transaction Throughput</em>
 
