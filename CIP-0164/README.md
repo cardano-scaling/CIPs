@@ -1937,6 +1937,8 @@ lower right)</em>
 
 </div>
 
+##### Behavior under varying load
+
 The simulation results also provide evidence that Leios operates as a well-behaved protocol, conforming to three specific desirable properties.
 
 1. *Throughput is proportional to load until it plateaus when capacity is reached:* Figure 14a illustrates the near equality of throughput to load up until the approximately 300 TxkB/s capacity (determined by the protocol parameters) is reached, beyond which throughput stays constant. (Note that the randomness of sortition and the finite duration of the simulation results in some jitter and uncertainty in the data points even though the trend is clear.) It is particularly important that the throughput does not degrade at very high demand: instead Leios provides backpressure on clients, via the memory pool, so that the protocol operates at capacity even though demand is higher.
@@ -1974,7 +1976,7 @@ The simulation results also provide evidence that Leios operates as a well-behav
 
 </div>
 
-<a name="resource-requirements"></a>**Resource requirements**
+##### Resource requirements
 
 The resource requirements for operating Leios nodes have been estimated from
 benchmarking and simulation studies. The assumed values for various Leios
