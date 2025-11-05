@@ -1468,6 +1468,9 @@ be extended to provide Leios specific information to applications. It is
 assumed nodes providing client interfaces will provide the modified block
 to clients.
 
+A [CDDL for merged blocks](#merged-block-cddl) is available in Appendix B.
+
+
 ## Rationale: how does this CIP achieve its goals?
 
 Ouroboros Leios introduces a committee-based voting layer over Nakamoto-style
@@ -2788,6 +2791,45 @@ tx_reference =
   [ tx_hash                  : hash32     ; Hash of complete transaction bytes
   , tx_size                  : uint16     ; Transaction size in bytes
   ]
+```
+
+<a id="merged-block-cddl" href="#merged-block-cddl">**Merged Block**</a>
+
+```diff
++ merged_block =
++   [ header                   : block_header
++   , transaction_bodies       : [* transaction_body]
++   , transaction_witness_sets : [* transaction_witness_set]
++   , auxiliary_data_set       : {* transaction_index => auxiliary_data}
++   , ? eb_certificate         : leios_certificate
++   , ? eb_tx_references       : [* tx_reference]
++   ]
+
++ block_header =
++   [ header_body              : block_header_body
++   , body_signature           : kes_signature
++   ]
+
++ block_header_body =
++   [ block_number             : uint
++   , slot                     : slot_no
++   , prev_hash                : hash32
++   , issuer_vkey              : vkey
++   , vrf_vkey                 : vrf_vkey
++   , vrf_result               : vrf_cert
++   , block_body_size          : uint
++   , block_body_hash          : hash32
++   , ? ( announced_eb         : hash32
++       , announced_eb_size    : uint32
++       )
++   , ? certified_eb           : bool
++   ]
+
++ ; Reference structures
++ tx_reference =
++  [ tx_hash                  : hash32     ; Hash of complete transaction bytes
++  , tx_size                  : uint16     ; Transaction size in bytes
++  ]
 ```
 
 <a id="votes-certificates-cddl" href="#votes-certificates-cddl">**Votes and
