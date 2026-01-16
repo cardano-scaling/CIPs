@@ -779,7 +779,7 @@ include the `endorser_block_hash` field that uniquely identifies the target EB:
   - `vote_signature`: Cryptographic signature (BLS in this implementation)
 - **Non-persistent votes**:
   - `election_id`: Identifier for the voting round (derived from the slot number
-    of the RB that announced the target EB)
+    of the RB that announced the target EB and some entropy likte the Praos nonce for that epoch)
   - `pool_id`: Pool identifier
   - `eligibility_signature`: Cryptographic proof of sortition eligibility (BLS
     in this implementation)
