@@ -1216,8 +1216,9 @@ $L_\text{diff}$ even during a burst of withheld-but-valid messages.
 **Concrete Proposal and its Feasibility**
 
 The following two new mini-protocols are proposed for the Leios implementation.
-This is not the only feasible solution, but this CIP should be amended as
-implementors refine these mini-protocols.
+They are assigned the mini-protocol numbers `LeiosNotify` = 18 and
+`LeiosFetch` = 19. This is not the only feasible solution, but this CIP should be
+amended as implementors refine these mini-protocols.
 
 If the general structure and semantics of mini-protocols is not already
 familiar, see the Chapter 2 "Multiplexing mini-protocols" and Chapter 3
@@ -1316,7 +1317,7 @@ not yet received MsgLeiosBlockTxsOffer.
 | Client→ | MsgLeiosBlockRequest            | slot and Leios hash                                          | The server must now deliver this block.                                                                                                                                                                                               |
 | ←Server | MsgLeiosBlock                   | EB block                                                     | The block from an earlier MsgLeiosBlockRequest.                                                                                                                                                                                       |
 | Client→ | MsgLeiosBlockTxsRequest         | slot, Leios hash, and map from 16-bit index to 64-bit bitmap | The server must now deliver these transactions. The given bitmap identifies which of 64 contiguous transactions are requested, and the offset of the transaction corresponding to the bitmap's first bit is 64 times the given index. |
-| ←Server | MsgLeiosBlockTxs                | list of transactions                                         | The transactions from an earlier MsgLeiosBlockTxsRequest.                                                                                                                                                                             |
+| ←Server | MsgLeiosBlockTxs                | slot, Leios hash, bitmap, and list of transactions          | The transactions from an earlier MsgLeiosBlockTxsRequest. The reply echoes the request's point (slot and Leios hash) and bitmap before the transaction list.                                                                          |
 | Client→ | MsgLeiosVotesRequest            | list of slot and vote-issuer-id                              | The server must now deliver these votes.                                                                                                                                                                                              |
 | ←Server | MsgLeiosVoteDelivery            | list of votes                                                | The votes from an earlier MsgLeiosVotesRequest.                                                                                                                                                                                       |
 | Client→ | MsgLeiosBlockRangeRequest       | two slots and two RB header hashes                           | The server must now deliver the EBs certified by the given range of RBs, in order.                                                                                                                                                    |
@@ -2882,14 +2883,15 @@ proofs-of-possession) used by Leios voting and certification.
 ```diff
  ranking_block =
    [ header                   : block_header
-   , transaction_bodies       : [* transaction_body]
-   , transaction_witness_sets : [* transaction_witness_set]
+   , transaction_bodies       : [* transaction_body]        ; indefinite-length array
+   , transaction_witness_sets : [* transaction_witness_set] ; indefinite-length array
    , auxiliary_data_set       : {* transaction_index => auxiliary_data}
    , invalid_transactions     : [* transaction_index]
-+  , ? eb_certificate         : leios_certificate
++  , eb_certificate           : leios_certificate / null    ; always present; null when absent
++  , peras_cert               : null                         ; reserved Peras slot; always present (null until Peras)
    ]
 
-block_header =
+ block_header =
    [ header_body              : block_header_body
    , body_signature           : kes_signature
    ]
@@ -2903,30 +2905,22 @@ block_header =
    , vrf_result               : vrf_cert
    , block_body_size          : uint
    , block_body_hash          : hash32
-+  , ? ( announced_eb         : hash32
-+      , announced_eb_size    : uint32
-+      )
-+  , ? certified_eb           : bool
++  , certified_eb             : bool
++  , announced_eb             : eb_announcement / null
+   ]
+
++eb_announcement =
++  [ eb_hash                  : hash32
++  , eb_size                  : uint32
    ]
 ```
 
 <a id="endorser-block-cddl" href="#endorser-block-cddl">**Endorser Block**</a>
 
 ```cddl
-endorser_block =
-  [ transaction_references   : omap<hash32, uint16>
-  ]
-
-; Ordered map type definition
-; An omap behaves like a map but preserves insertion order and prevents duplicate keys
-; This ensures deterministic serialization while maintaining transaction sequence
-omap<K, V> = {* K => V}  ; Order-preserving map with unique keys
-
-; Legacy reference structure (for documentation)
-; tx_reference =
-;   [ tx_hash                  : hash32     ; Hash of complete transaction bytes
-;   , tx_size                  : uint16     ; Transaction size in bytes
-;   ]
+; EB body: a bare, definite-length CBOR map from transaction hash to size.
+; No array wrapper; keys are insertion-ordered and unique.
+endorser_block = {* hash32 => uint32}  ; tx_hash => tx_size (in bytes)
 ```
 
 <a id="votes-certificates-cddl" href="#votes-certificates-cddl">**Votes and
