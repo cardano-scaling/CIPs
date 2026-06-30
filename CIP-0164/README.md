@@ -1328,12 +1328,6 @@ not yet received MsgLeiosBlockTxsOffer.
 
 </div>
 
-Wherever a message carries an EB reference ("slot and Leios hash" above), that
-point is encoded on the wire as an explicit nested CBOR array of two elements,
-`[ slot, eb_hash ]`, rather than as a flattened/transparent group. This resolves
-the encode/decode ambiguity tracked in
-[cardano-blueprint#68](https://github.com/cardano-scaling/cardano-blueprint/issues/68).
-
 This mini-protocol pair satisfies the above requirements in the following ways.
 
 - These mini-protocols have less width than the LocalStateQuery mini-protocol
@@ -2897,7 +2891,7 @@ proofs-of-possession) used by Leios voting and certification.
 +  , peras_cert               : null                         ; reserved Peras slot; always present (null until Peras)
    ]
 
-block_header =
+ block_header =
    [ header_body              : block_header_body
    , body_signature           : kes_signature
    ]
@@ -2911,8 +2905,13 @@ block_header =
    , vrf_result               : vrf_cert
    , block_body_size          : uint
    , block_body_hash          : hash32
-+  , ? announced_eb           : [ hash32, uint32 ]  ; nested array(2): [ eb_hash, eb_size ]
-+  , ? certified_eb           : bool
++  , certified_eb             : bool
++  , announced_eb             : eb_announcement / null
+   ]
+
++eb_announcement =
++  [ eb_hash                  : hash32
++  , eb_size                  : uint32
    ]
 ```
 
