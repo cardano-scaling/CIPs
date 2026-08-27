@@ -803,22 +803,23 @@ implementation described here, this would be a BLS key over the BLS12-381
 elliptic curve.
 
 <a id="key-registration" href="#key-registration"></a>**Key Registration and
-Rotation**: The proposed mechanism is to extend the existing stake pool
-registration certificate to carry the voting key, rather than introduce a
-dedicated certificate or place the key in the block header. Extending the pool
-registration certificate binds the voting key's lifecycle to the pool's —
-registered, re-registered, and retired together — and reuses the authorization
-already required to register a pool, adding no new certificate type or
-witnessing rule. A dedicated certificate would also work but adds a new type
-and lifecycle to specify and maintain; a header-carried key (analogous to the
-VRF key and signed by the KES key) was likewise considered and would let the
-key ride the operational-certificate path, at the cost of requiring the ledger
-to observe block headers.
+Rotation**: The proposed mechanism is a **dedicated certificate** that registers
+or rotates a pool's voting key and nothing else, authorized by the pool's cold
+key and submitted in an ordinary transaction. Because keys
+[expire](#key-expiry) and must therefore be re-registered every few months, the
+decisive property is that rotation be cheap and hard to get wrong. A dedicated
+certificate carries only the pool identity and the new key material, so an
+operator rotating quarterly never restates pool parameters such as margin, cost,
+pledge or relays, and cannot silently change them by omission. Extending the pool
+registration certificate instead, as earlier drafts of this CIP proposed, would
+add no new certificate type but would make every rotation a full
+re-registration, which is a far larger surface to get wrong for the more frequent
+operation.
 
 The registered key material is a public key together with a proof of possession
-carried in an optional `bls_key` field of the pool registration certificate (see
-[Pool Registration](#pool-registration-cddl) in Appendix B). The proof of
-possession is mandatory and verified at registration: BLS aggregate signatures
+(see [Voting Key Registration](#bls-key-registration-cddl) in Appendix B). The
+proof of possession is mandatory and verified at registration: BLS aggregate
+signatures
 are otherwise vulnerable to rogue-key attacks, in which an adversary registers a
 key crafted relative to others' keys so that an aggregate appears to include
 voters who never signed. Only a key with a valid proof of possession may occupy
@@ -834,10 +835,9 @@ comparable to KES *key rotation* (~90 days on Cardano mainnet), enforced by
 epochs after its registration, and a pool that has not re-registered by then
 occupies a *keyless* seat until it does. Expiry takes effect at an epoch
 boundary, like activation, so an epoch's committee has a stable set of usable
-keys throughout. Because the key is carried by the pool registration
-certificate, re-registering it is an ordinary pool re-registration, and the
-registration epoch the expiry is measured from is the epoch in which that
-certificate was accepted.
+keys throughout. Because the key is carried by its own certificate,
+re-registering it costs nothing but that certificate, and the registration
+epoch the expiry is measured from is the epoch in which it was accepted.
 
 The expiry period is **not a protocol parameter**: it is derived
 deterministically from the KES setup already fixed in genesis, as
@@ -2849,12 +2849,27 @@ stake data.)
   simulation or operational data warrant it.
 
 The adaptive-security argument above is contingent on BLS key rotation
-(Appendix A requirement 2). The on-chain mechanism — extending the pool
-registration certificate to carry the voting key, with epoch-boundary
-activation aligned to VRF-key rotation — is specified under [Key Registration
-and Rotation](#key-registration). The static-vs-adaptive distinction applies
-equally to *all* schemes considered here (stake-based truncation, wFA^LS, and
-All-vote alike), so the relative comparison above is unaffected.
+(Appendix A requirement 2). The on-chain mechanism, a dedicated certificate with
+epoch-boundary activation aligned to VRF-key rotation, is specified under [Key
+Registration and Rotation](#key-registration). The static-vs-adaptive distinction
+applies equally to *all* schemes considered here (stake-based truncation, wFA^LS,
+and All-vote alike), so the relative comparison above is unaffected.
+
+**Registering the voting key in the block header was rejected.** Carrying the key
+and its proof of possession in the header, signed by the KES key the way the VRF
+key is, would let rotation ride the operational-certificate path and avoid a
+transaction entirely. That was the original goal, on the assumption that asking
+operators to submit a transaction every quarter would suppress participation.
+Two problems proved decisive. The key and proof cannot sit in *every* header,
+since that is 144 bytes of dead weight on the most latency-critical object in the
+protocol, so headers would need two operational-certificate shapes and a rule for
+when a producer switches between them. And it is genuinely unclear what an
+invalid proof of possession should mean: rejecting the block punishes consensus
+for a registration mistake, while accepting it means a header can assert a
+registration that silently did not happen. The premise turned out to be wrong in
+any case, since operators are content to submit one transaction per quarter, so
+the header path buys a convenience nobody needed at the cost of complicating
+block validity.
 
 **Why the committee is sized directly.** Earlier drafts configured the committee
 by a cumulative-stake target ($\sigma_c$) and let the seat count follow, to guard
@@ -3475,37 +3490,33 @@ leios_signature            = bytes .size 48  ; a certificate's, on the chain
 leios_bls_pop              = bytes .size 48
 ```
 
-<a id="pool-registration-cddl" href="#pool-registration-cddl">**Pool
+<a id="bls-key-registration-cddl" href="#bls-key-registration-cddl">**Voting Key
 Registration**</a>
 
-Registering a voting key extends the existing stake pool registration
-certificate with an optional `bls_key` field that may also be `nil` (for
-backwards compatibility). A pool that has not registered a voting key occupies a
-*keyless* committee seat (see [Key Registration and
-Rotation](#key-registration)):
-
+A voting key is registered and rotated by a dedicated certificate carrying the
+pool identity and the key material, witnessed by the pool's cold key exactly as
+`pool_registration_cert` is. It takes the next free certificate tag. A pool with
+no unexpired registration occupies a *keyless* committee seat (see [Key
+Registration and Rotation](#key-registration)).
 
 ```diff
- pool_registration_cert = (3, pool_params)
+ certificate =
+   [  delegation_to_stake_pool_cert
+   // pool_registration_cert
+   // pool_retirement_cert
+   ...
+   // drep_update_cert
++  // bls_key_registration_cert
+   ]
 
- pool_params =
-   (   operator       : pool_keyhash
-   ,   vrf_keyhash    : vrf_keyhash
-+  , ? bls_key        : bls_key/ nil
-   ,   pledge         : coin
-   ,   cost           : coin
-   ,   margin         : unit_interval
-   ,   reward_account : reward_account
-   ,   pool_owners    : set<addr_keyhash>
-   ,   relays         : [* relay]
-   ,   pool_metadata  : pool_metadata/ nil
-   )
-
-+bls_key =
-+  [ bls_pubkey           : leios_bls_verification_key
-+  , bls_possession_proof : leios_bls_pop
-+  ]
++bls_key_registration_cert =
++  (19, pool_keyhash, leios_bls_verification_key, leios_bls_pop)
 ```
+
+Registering again replaces the pool's previous key and restarts the
+[expiry](#key-expiry) countdown, so rotation and first registration are the same
+operation and no separate deregistration certificate is needed: a pool that stops
+re-registering becomes keyless by expiry.
 
 <a id="protocol-parameters-cddl" href="#protocol-parameters-cddl">**Protocol
 Parameters**</a>
