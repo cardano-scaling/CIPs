@@ -820,8 +820,24 @@ selected by stake without having registered a valid voting key; such a seat is
 signer must be rejected.
 
 Voting keys **rotate** on a cadence comparable to KES *key rotation* (~90 days
-on Cardano mainnet), which a corresponding key time-to-live should enforce.
-This is distinct from KES *key evolution* (~12 hours): evolution provides
+on Cardano mainnet), enforced by **expiry**: the ledger stops honouring a
+registered voting key a fixed number of epochs after its registration, and a pool
+that has not re-registered by then occupies a *keyless* seat until it does.
+Expiry takes effect at an epoch boundary, like activation, so an epoch's
+committee has a stable set of usable keys throughout.
+
+The expiry period is a **Dijkstra genesis parameter** rather than a protocol
+parameter, alongside `slotsPerKESPeriod` and `maxKESEvolutions`: it bounds how
+stale a key may be, which the network must agree on from the start rather than
+retune by governance. It must exceed the KES rotation period so that rotating
+both keys on one schedule remains possible, and must additionally absorb the
+activation delay, since a voting key registered now does not become usable until
+the snapshot it appears in goes active. On mainnet the KES rotation period is
+`slotsPerKESPeriod * maxKESEvolutions / epochLength = 18.6` epochs, so **20
+epochs** leaves room for the one epoch of activation delay, or two when
+activation is aligned with VRF-key rotation as recommended below.
+
+Expiry is distinct from KES *key evolution* (~12 hours): evolution provides
 forward secrecy within a single key's lifetime and is not required for voting
 keys. Unlike a KES key, which takes effect immediately on the chain it is used
 to build, a voting key must be **activated at an epoch boundary**, because the
