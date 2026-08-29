@@ -826,16 +826,29 @@ that has not re-registered by then occupies a *keyless* seat until it does.
 Expiry takes effect at an epoch boundary, like activation, so an epoch's
 committee has a stable set of usable keys throughout.
 
-The expiry period is a **Dijkstra genesis parameter** rather than a protocol
-parameter, alongside `slotsPerKESPeriod` and `maxKESEvolutions`: it bounds how
-stale a key may be, which the network must agree on from the start rather than
-retune by governance. It must exceed the KES rotation period so that rotating
-both keys on one schedule remains possible, and must additionally absorb the
-activation delay, since a voting key registered now does not become usable until
-the snapshot it appears in goes active. On mainnet the KES rotation period is
-`slotsPerKESPeriod * maxKESEvolutions / epochLength = 18.6` epochs, so **20
-epochs** leaves room for the one epoch of activation delay, or two when
-activation is aligned with VRF-key rotation as recommended below.
+The expiry period is **not a parameter**: it is derived deterministically from
+the KES setup already fixed in genesis, as
+
+```
+maxKeyAgeEpochs = ceil(slotsPerKESPeriod * maxKESEvolutions / epochLength) + 2
+```
+
+i.e. the KES key lifetime rounded up to whole epochs, plus two epochs for the
+activation delay — a voting key registered now enters the mark snapshot at the
+next epoch boundary and the active committee only at the one after. Pools must
+rotate their KES key on exactly this cadence anyway, so deriving the bound keeps
+voting and operational key rotation on a single schedule by construction, with
+no second knob that could drift out of step. On mainnet the KES rotation period
+is `slotsPerKESPeriod * maxKESEvolutions / epochLength = 18.6` epochs, so the
+bound derives to **21 epochs**. Retuning the cadence therefore means changing the KES
+setup itself, which — like `slotsPerKESPeriod` and `maxKESEvolutions` today —
+requires a hard fork; the expiry never becomes stale relative to the rotation
+schedule it exists to track.
+
+The name says *key* rather than *voting key* deliberately. A pool's VRF key wants
+rotating on much the same cadence and for much the same reason, and expiring it
+would follow the same bound; a future protocol version can put VRF keys under it
+without introducing anything new to keep in step.
 
 Expiry is distinct from KES *key evolution* (~12 hours): evolution provides
 forward secrecy within a single key's lifetime and is not required for voting
