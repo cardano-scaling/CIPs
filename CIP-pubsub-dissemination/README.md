@@ -937,7 +937,7 @@ The cap bounds incoming admissions while leaving a node's own selections outside
 
 **Gate and cap.** A narrower eligible pool raises the price of targeted contact but can hurt coverage. A tighter cap reduces admissions but can crowd out honest peers. Neither substitutes for choosing enough peers.
 
-**Membership assumptions.** Every probability depends strongly on the adversarial share. Registration cost is intended to constrain that share, but the draft does not yet establish an economic relationship between the deposit and the assumed *μ*.
+**Membership assumptions.** Every probability depends strongly on the adversarial share. Registration cost is intended to constrain that share, but the draft does not yet establish an economic relationship between the deposit and the assumed *μ*. What follows from the definitions alone is the outlay: *μ* is a share of registered identities, so holding it on a topic of *N*<sub>T</sub> members means standing ⌈*μN*<sub>T</sub>⌉ entries at once, each locking its own deposit, and at the reference population of 20,000 members and *μ* = 0.2 that is 4,000 simultaneous deposits, each released only once the [claim rule](#deposit-claim) is satisfied. Reaching a chosen victim costs more than reaching the network: an identity is eligible for that victim with probability 1/*B*, so about *B* deposits buy one eligible hostile identity, as [the verifiable gate](#the-verifiable-gate) sets out. What remains open is the inverse, the deposit at which a given *μ* becomes implausible, since that needs an assumed attacker budget and a view on the cost of locked ada, which a deployment profile states rather than the protocol.
 
 ### What a subscriber is guaranteed
 
