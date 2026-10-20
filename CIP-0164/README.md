@@ -3242,3 +3242,66 @@ leios_bls_pop              = bytes .size 96
 ## Copyright
 
 This CIP is licensed under [Apache-2.0][apache-2.0].
+
+<!--
+CIP-0164 audit - Review 1 (Until and including "Protocol Security")
+
+Equivocation-detection window (Figure 4):
+
+I am a bit unclear about the 3x L_hdr—if a conflicting header is released
+*after* the first L_hdr period, could the evidence of the equivocation
+come too late to be detected before voting? Is this not an issue because
+only headers that come within the first L_hdr are ever considered?
+
+Optimistic Delta_EB^O:
+
+In the inequality 3*L_hdr + L_vote > Delta_EB^O, the optimistic time is
+used. Thus, if conditions are not optimistic, it sounds like there is
+insufficient time for voting. I'm wondering what conditions are considered
+"optimistic" and what tradeoffs are considered between ensuring sufficient
+time for voting and not making the period too long.
+
+Regarding the Diffusion Period (L_diff) inequality:
+L_diff >= Delta_EB^W + Delta_reapply - Delta_RB - 3*L_hdr - L_vote
+
+What is the starting point at which we consider Delta_EB^W in this
+inequality? Does it bound the time to disseminate from (1) when there is 
+sufficient honest stake holding the EB, or (2) from the EB's creation?
+The table in Network Characteristics suggests (1) is the case, whereas 
+the inequality with L_diff seems to suggest (2). This is because the inequality 
+implies L_diff + Delta_RB + 3*L_hdr + L_vote >= Delta_EB^W + Delta_reapply,
+and we have the left hand side counting from the time the EB is created
+(so I'm inferring that the right hand side should too).
+
+Minor — notation for Delta_EB^W and Delta_EB^O:
+
+Delta_EB^W and Delta_EB^O appear to count different quantities (W seems
+to count from when the EB is already held by some parties, whereas O
+does not), but the current notation suggests they count the same
+quantity, just differing by the worst case/optimistic case. Thus a
+suggestion is to distinguish the two notations a bit more.
+
+In Protocol Security, section 2 (Certified EB Transmission Constraint):
+
+Delta_applyTxs is used, where it is > Delta_reapply. However, if L_diff
+is chosen according to the Diffusion Period inequality, using
+Delta_reapply, L_diff might be smaller than what is required by the
+Certified EB Transmission Constraint (which uses the bigger
+Delta_applyTxs quantity). Could this cause a timing issue?
+
+General timing question & suggestion:
+
+I would suggest clarifying that parties always count to the end of
+a timing parameter before starting the next one. For example, if I
+receive all the votes I need before L_vote is over, I will still count
+until the end of L_vote to start my L_diff timer. Otherwise, different
+honest parties may be out of sync with their timing.
+
+General timing question — clock differences:
+
+On a related note, do we consider the case when different honest parties
+might have a slightly different clock? For example, if their clocks are
+off by 1 second, this can cause a vote to be accepted by some parties
+but not others. I don't think this causes a safety issue but perhaps
+could affect liveness.
+-->
