@@ -790,6 +790,8 @@ simple structure:
 - `transaction_references`: Ordered map from transaction hash to transaction
   size, preserving insertion order while preventing duplicate entries and
   ensuring deterministic serialization
+- `prefix`: Reserved for [partial certification](#partial-certification) and
+  must be absent. An EB carrying it is invalid and receives no votes.
 
 A [CDDL for endorser blocks](#endorser-block-cddl) is available in Appendix B.
 
@@ -939,7 +941,9 @@ for choosing both, and the rationale for this scheme over the alternatives
 considered is recorded in [Design Decisions](#voting-committee-selection).
 
 The certificate accordingly consists of a bitfield indicating which committee
-members signed plus a single aggregated BLS signature. Its size grows linearly
+members signed plus a single aggregated BLS signature. A third, optional field
+`prefix` is reserved for [partial certification](#partial-certification) and
+must be absent. Its size grows linearly
 in committee size, dominated by the bitfield ($\lceil N_c/8 \rceil$ bytes) plus
 a fixed signature and overhead.
 
@@ -989,6 +993,8 @@ following before accepting the block:
 5. **Announcement Consistency**: The signed message is the hash of the
    announcing RB header, which is determined from the certifying RB's chain
    context rather than carried in the certificate
+
+6. **Reserved Fields**: The certificate's `prefix` field is absent
 
 Formal pen-and-paper algorithms for the voting and certificate scheme are
 given in the [ARC voting crypto review][arc-voting-review] (the scheme in
@@ -2995,6 +3001,42 @@ mechanisms through invalid transaction lists in subsequent certified EBs or
 ranking blocks could mitigate these issues, though at the expense of additional
 protocol complexity.
 
+<a id="partial-certification" href="#partial-certification"></a>**Partial
+Certification**
+
+An EB that most voters cannot fetch and validate by the voting deadline is not
+certified, and that block contributes only Praos throughput. This happens when
+mempools diverge, whether under load or because an adversary pre-shares an EB's
+transactions with only part of the network. Partial certification would instead
+certify the prefix of the EB that most voters did validate, trading vote traffic
+for certification throughput.
+
+The EB and certificate formats reserve a `prefix` field for this, so it can be
+introduced by an intra-era hard fork rather than waiting for a new era:
+
+- The EB producer sets `prefix` to a transaction count $n$ smaller than the
+  number of referenced transactions, suggesting where to split; for example,
+  where the transactions it expects to be widely propagated end.
+- A voter that validated the first $n$ transactions by the voting deadline signs
+  a message binding `announcing_rb_hash` and $n$. A voter that validated the
+  whole EB also signs `announcing_rb_hash` as today, so a vote carries up to two
+  signatures. Votes are not part of the chain, so their format changes with a
+  node-to-node protocol version.
+- A certificate whose `prefix` is $n$ aggregates the signatures over that
+  message and applies only the first $n$ transactions of the EB, which must
+  carry the same `prefix`. A certificate without `prefix` is unchanged.
+- $n$ is in the certificate, so a CertRB stays valid if and only if its header
+  and certificate are, and can still be relayed before its EB arrives.
+- A certified prefix is never larger than its EB, so the
+  [certified EB transmission constraint](#certified-eb-transmission-constraint)
+  covers it and no new protocol parameter is needed.
+
+The cost is up to twice the vote signatures to transmit and verify, and nodes
+tracking whether they hold a complete prefix of an EB rather than all of it.
+Whether it is needed depends on how often honest mempools diverge on mainnet;
+producers adapting EB sizes to observed vote participation address the same
+case without any protocol change.
+
 **Transaction Groups**
 
 Transaction grouping mechanisms offer natural throughput optimization by
@@ -3424,7 +3466,10 @@ wholly there or `nil`.
 <a id="endorser-block-cddl" href="#endorser-block-cddl">**Endorser Block**</a>
 
 ```cddl
-endorser_block = omap<hash32, uint .size 4>   ; transaction references
+endorser_block =
+  [ transaction_references : omap<hash32, uint .size 4>
+  , ? prefix               : uint .size 2  ; reserved, must be absent
+  ]
 
 ; Ordered map type definition
 ; An omap behaves like a map but preserves insertion order and prevents duplicate keys
@@ -3438,10 +3483,10 @@ omap<K, V> = {* K => V}  ; Order-preserving map with unique keys
 ;   ]
 ```
 
-The endorser block **is** the map; it is not wrapped in an enclosing array.
-This matters beyond encoding tidiness: an EB's identifier is the hash of
-exactly these bytes, so a redundant wrapper would change which block a hash
-denotes.
+An EB's identifier is the hash of exactly these bytes, so its shape cannot
+change within an era. The enclosing array is there so that the reserved
+`prefix` can be given meaning by a later intra-era hard fork without one; see
+[Partial Certification](#partial-certification).
 
 The declared size is a 32-bit quantity: a 16-bit size would cap an endorsable
 transaction at 64 KiB, which the `maxTxSize` protocol parameter is free to
@@ -3454,6 +3499,7 @@ Certificates**</a>
 leios_certificate =
   [ signers               : bytes .size (0 .. 8192)  ; bitfield over the epoch's committee, MSB-first; bit i set iff voter_id = i signed
   , signature             : leios_signature
+  , ? prefix              : uint .size 2             ; reserved, must be absent
   ]
 
 leios_vote =
