@@ -3305,3 +3305,36 @@ off by 1 second, this can cause a vote to be accepted by some parties
 but not others. I don't think this causes a safety issue but perhaps
 could affect liveness.
 -->
+
+<!-- 
+CIP-0164 audit - Review 2 (Starting from "Protocol Security")
+
+- Keyless seats and the voting threshold (Protocol Artifacts -> Votes and Certificates -> Key Registration and Rotation / Committee Structure):
+  Please clarify if a keyless seat is counted towards the voting threshold. Currently, it says that the top N_c pools by "active stake" used as the committee, and all "active stake" is counted for the threshold. But, it is unclear if "keyless seats" are counted as active stake or not.
+
+- Committee selection and certification liveness (Protocol Artifacts -> Votes and Certificates -> Committee Structure):
+  If the top N_c pools by active stake is chosen as the committee, this causes a potential liveness issue, since honest majority of stake overall might not imply honest majority of the top N_c pools.
+
+- Minor wording suggestion (Node Behavior -> RB Block Production and Diffusion):
+  Suggest to change "The optional EB is a larger block..." to "The announced EB is a larger block...".
+
+- Minor wording suggestions (Protocol Flow -> Step 5: Chain Inclusion; Node Behavior -> RB Block Production and Diffusion):
+  In Step 5: Chain Inclusion of the Protocol Flow, suggest rewording "a preceding block" to "the preceding block". In "RB Block Production and Diffusion", suggest rewording "to reference one EB" to "to reference the EB announced by the preceding RB". This makes it more obvious that the RB should only reference the EB from the preceding block.
+
+- Minor wording suggestion (Node Behavior -> EB Diffusion):
+  Suggest to add a reminder here in EB Diffusion that if an EB producer is found equivocating, an honest node does not vote for this EB.
+
+- Transaction validity flag across competing forks (Node Behavior -> EB Diffusion -> Transaction Validation):
+  In "EB Diffusion", it says "nodes must receive all EBs from competing forks". Since different forks may reference different EBs, this implies different forks can reference different sets of transactions. However, in "Transaction Validation", it says "to optimize validation work, nodes maintain a set S... each entry in S contains 1. The transaction itself 2. A validation flag". But the validity status of a transaction should depend on which fork the transaction is on, since it depends on the other transactions. Thus, a single set S of transaction statuses seems insufficient.
+
+- Minor clarification (Node Behavior -> Voting & Certification -> Vote Propagation):
+  Although this is not critical to protocol correctness, a suggestion is to still make explicit what "new-ness" means in "newer votes are prioritized over older ones".
+
+Additional items I've checked and agree with:
+
+- Committee selection (Protocol Artifacts -> Votes and Certificates -> Committee Structure):
+  Indeed, the choice of the voting committee should not be an issue for safety, only liveness.
+
+- Figure 5 and the descriptions that follow (Node Behavior):
+  The steps in Figure 5 do correspond to the descriptions that follow. Only minor thing is that Step 6b is missing (suggest to be added after "EBs are forwarded before complete validity checks are performed" in EB Diffusion).
+-->
