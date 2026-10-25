@@ -3242,3 +3242,99 @@ leios_bls_pop              = bytes .size 96
 ## Copyright
 
 This CIP is licensed under [Apache-2.0][apache-2.0].
+
+<!--
+CIP-0164 audit - Review 1 (Until and including "Protocol Security")
+
+Equivocation-detection window (Figure 4):
+
+I am a bit unclear about the 3x L_hdr—if a conflicting header is released
+*after* the first L_hdr period, could the evidence of the equivocation
+come too late to be detected before voting? Is this not an issue because
+only headers that come within the first L_hdr are ever considered?
+
+Optimistic Delta_EB^O:
+
+In the inequality 3*L_hdr + L_vote > Delta_EB^O, the optimistic time is
+used. Thus, if conditions are not optimistic, it sounds like there is
+insufficient time for voting. I'm wondering what conditions are considered
+"optimistic" and what tradeoffs are considered between ensuring sufficient
+time for voting and not making the period too long.
+
+Regarding the Diffusion Period (L_diff) inequality:
+L_diff >= Delta_EB^W + Delta_reapply - Delta_RB - 3*L_hdr - L_vote
+
+What is the starting point at which we consider Delta_EB^W in this
+inequality? Does it bound the time to disseminate from (1) when there is 
+sufficient honest stake holding the EB, or (2) from the EB's creation?
+The table in Network Characteristics suggests (1) is the case, whereas 
+the inequality with L_diff seems to suggest (2). This is because the inequality 
+implies L_diff + Delta_RB + 3*L_hdr + L_vote >= Delta_EB^W + Delta_reapply,
+and we have the left hand side counting from the time the EB is created
+(so I'm inferring that the right hand side should too).
+
+Minor — notation for Delta_EB^W and Delta_EB^O:
+
+Delta_EB^W and Delta_EB^O appear to count different quantities (W seems
+to count from when the EB is already held by some parties, whereas O
+does not), but the current notation suggests they count the same
+quantity, just differing by the worst case/optimistic case. Thus a
+suggestion is to distinguish the two notations a bit more.
+
+In Protocol Security, section 2 (Certified EB Transmission Constraint):
+
+Delta_applyTxs is used, where it is > Delta_reapply. However, if L_diff
+is chosen according to the Diffusion Period inequality, using
+Delta_reapply, L_diff might be smaller than what is required by the
+Certified EB Transmission Constraint (which uses the bigger
+Delta_applyTxs quantity). Could this cause a timing issue?
+
+General timing question & suggestion:
+
+I would suggest clarifying that parties always count to the end of
+a timing parameter before starting the next one. For example, if I
+receive all the votes I need before L_vote is over, I will still count
+until the end of L_vote to start my L_diff timer. Otherwise, different
+honest parties may be out of sync with their timing.
+
+General timing question — clock differences:
+
+On a related note, do we consider the case when different honest parties
+might have a slightly different clock? For example, if their clocks are
+off by 1 second, this can cause a vote to be accepted by some parties
+but not others. I don't think this causes a safety issue but perhaps
+could affect liveness.
+-->
+
+<!-- 
+CIP-0164 audit - Review 2 (Starting from "Protocol Security")
+
+- Keyless seats and the voting threshold (Protocol Artifacts -> Votes and Certificates -> Key Registration and Rotation / Committee Structure):
+  Please clarify if a keyless seat is counted towards the voting threshold. Currently, it says that the top N_c pools by "active stake" used as the committee, and all "active stake" is counted for the threshold. But, it is unclear if "keyless seats" are counted as active stake or not.
+
+- Committee selection and certification liveness (Protocol Artifacts -> Votes and Certificates -> Committee Structure):
+  If the top N_c pools by active stake is chosen as the committee, this causes a potential liveness issue, since honest majority of stake overall might not imply honest majority of the top N_c pools.
+
+- Minor wording suggestion (Node Behavior -> RB Block Production and Diffusion):
+  Suggest to change "The optional EB is a larger block..." to "The announced EB is a larger block...".
+
+- Minor wording suggestions (Protocol Flow -> Step 5: Chain Inclusion; Node Behavior -> RB Block Production and Diffusion):
+  In Step 5: Chain Inclusion of the Protocol Flow, suggest rewording "a preceding block" to "the preceding block". In "RB Block Production and Diffusion", suggest rewording "to reference one EB" to "to reference the EB announced by the preceding RB". This makes it more obvious that the RB should only reference the EB from the preceding block.
+
+- Minor wording suggestion (Node Behavior -> EB Diffusion):
+  Suggest to add a reminder here in EB Diffusion that if an EB producer is found equivocating, an honest node does not vote for this EB.
+
+- Transaction validity flag across competing forks (Node Behavior -> EB Diffusion -> Transaction Validation):
+  In "EB Diffusion", it says "nodes must receive all EBs from competing forks". Since different forks may reference different EBs, this implies different forks can reference different sets of transactions. However, in "Transaction Validation", it says "to optimize validation work, nodes maintain a set S... each entry in S contains 1. The transaction itself 2. A validation flag". But the validity status of a transaction should depend on which fork the transaction is on, since it depends on the other transactions. Thus, a single set S of transaction statuses seems insufficient.
+
+- Minor clarification (Node Behavior -> Voting & Certification -> Vote Propagation):
+  Although this is not critical to protocol correctness, a suggestion is to still make explicit what "new-ness" means in "newer votes are prioritized over older ones".
+
+Additional items I've checked and agree with:
+
+- Committee selection (Protocol Artifacts -> Votes and Certificates -> Committee Structure):
+  Indeed, the choice of the voting committee should not be an issue for safety, only liveness.
+
+- Figure 5 and the descriptions that follow (Node Behavior):
+  The steps in Figure 5 do correspond to the descriptions that follow. Only minor thing is that Step 6b is missing (suggest to be added after "EBs are forwarded before complete validity checks are performed" in EB Diffusion).
+-->
